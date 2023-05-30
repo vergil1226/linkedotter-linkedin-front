@@ -1,0 +1,85 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.page_404 {
+  padding: 40px 0;
+  background: #fff;
+  font-family: "Arvo", serif;
+}
+
+.page_404 img {
+  width: 100%;
+}
+
+.four_zero_four_bg {
+  background-image: url("https://img.freepik.com/free-vector/error-404-concept-landing-page_52683-18367.jpg?w=1380&t=st=1684822944~exp=1684823544~hmac=de7f5e90659fa748bc54f67e1730d2f7e69ff82b919dc6e481de7f68b7c9379b");
+  height: 400px;
+  background-position: center;
+}
+
+.four_zero_four_bg h1 {
+  font-size: 140px;
+  font-weight: bolder;
+}
+
+.four_zero_four_bg h3 {
+  font-size: 140px;
+  font-weight: 400;
+}
+
+.link_404 {
+  color: #fff !important;
+  padding: 10px 20px;
+  background: #39ac31;
+  margin: 20px 0;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5%;
+}
+.contant_box_404 {
+  margin-top: 50px;
+  font-size: x-large;
+}
+body {
+  overflow: auto;
+  overflow-y: scroll;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
