@@ -72,12 +72,10 @@ export default function RegisterPage() {
                   <h2 className="fw-bold mb-2 text-center text-uppercase ">
                     Register
                   </h2>
-                  <div className="mb-3">
+                  <div className="mb-3 text-start">
                     <Form>
                       <Form.Group className="mb-3" controlId="Name">
                         <Form.Label
-                          style={{ paddingRight: "99%" }}
-                          className="text-center"
                         >
                           Name
                         </Form.Label>
@@ -94,8 +92,6 @@ export default function RegisterPage() {
 
                       <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label
-                          style={{ paddingRight: "82%", wordWrap: "n" }}
-                          className="text-center"
                         >
                           Email address
                         </Form.Label>
@@ -114,7 +110,7 @@ export default function RegisterPage() {
                         className="mb-3"
                         controlId="formBasicPassword"
                       >
-                        <Form.Label style={{ paddingRight: "99%" }}>
+                        <Form.Label>
                           Password
                         </Form.Label>
 
@@ -132,7 +128,7 @@ export default function RegisterPage() {
                         className="mb-3"
                         controlId="formBasicPassword"
                       >
-                        <Form.Label style={{ marginRight: "100%" }}>
+                        <Form.Label>
                           Team
                         </Form.Label>
 
