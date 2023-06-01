@@ -360,7 +360,6 @@ export default function AdminDashBoard() {
                       {/* <td>{item.lastMessageFromUrl}</td> */}
                       <td>{item.isLastMessageFromMe ? "Yes" : "No"}</td>
                       <td><a href={item.lastMessageFromUrl}><FontAwesomeIcon icon={faArrowUpRightFromSquare} /></a></td>
-
                       {/* <td>{item.updatedAt}</td> */}
                     </tr>
                   ))}
