@@ -3,6 +3,10 @@ import baseURL from "../../ApiWork/BaseUrl";
 import { ToastContainer, toast } from "react-toastify";
 import { FormLabel, Table, Button, Modal } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
+import Moment from 'react-moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
+
 export default function AdminDashBoard() {
   const [messages, setMessages] = useState([]);
   const [Launched, setLaunched] = useState();
@@ -23,27 +27,26 @@ export default function AdminDashBoard() {
         limit: 10,
         page: active,
       };
-// if
-if(messages)
-{
-  const resp = await baseURL.post("/fetch/all/messages", data);
-  setMessages(resp.data.data.data);
-  // console.log("first", resp.data.data.count);
-  let dataCount = [];
-  for (
-    let number = 1;
-    number <= Math.ceil(resp.data.data.count / 10);
-    number++
-  ) {
-    dataCount.push(number);
-  }
-  setitems([...dataCount]);
-} 
-}
-catch (error) {
- // alert("api error ");
-}
-};
+      // if
+      if (messages) {
+        const resp = await baseURL.post("/fetch/all/messages", data);
+        setMessages(resp.data.data.data);
+        // console.log("first", resp.data.data.count);
+        let dataCount = [];
+        for (
+          let number = 1;
+          number <= Math.ceil(resp.data.data.count / 10);
+          number++
+        ) {
+          dataCount.push(number);
+        }
+        setitems([...dataCount]);
+      }
+    }
+    catch (error) {
+      // alert("api error ");
+    }
+  };
 
   const teams = [
     {
@@ -318,27 +321,25 @@ catch (error) {
             </div>
           </div>
         </div>
-        {messages? (
-          <div
+        {messages ? (
+          <div className="container px-5 mt-5 w-100"
             style={{
-              marginTop: "10%",
-              width: "100%",
               maxWidth: "100%",
               overflow: "auto",
             }}
           >
-            <Table striped bordered hover>
+            <Table striped bordered hover responsive>
               <thead>
                 <tr>
                   {/* <th>user_id</th>
                 <th>container_id</th>
                 <th>createdAt</th> */}
-                  <th>Full Name</th>
-                  <th>Message From Me?</th>
-                  <th>Message</th>
-                  <th>Read Status</th>
-                  <th>Last Message Date</th>
-                  <th>Message Url</th>
+                  <th>Person Name</th>
+                  <th className="col-xxl-1 col-xl-2 col-md-3 col-sm-3">LastReply Time</th>
+                  <th>Last Reply content</th>
+                  <th>Interested?</th>
+                  <th>LinkedIn URL</th>
+                  {/* <th>Message Url</th>   */}
 
                   {/* <th>updatedAt</th> */}
                 </tr>
@@ -351,15 +352,14 @@ catch (error) {
                     <td>{item.container_id}</td>
                     <td>{item.createdAt}</td> */}
                       <td>{item.firstnameFrom + " " + item.lastnameFrom}</td>
-                      <td>{item.isLastMessageFromMe ? "Yes" : "No"}</td>
                       {/* {console.log("item.isLastMessageFromMe", item.readStatus)} */}
 
-                      {/* <td>{item.lastnameFrom}</td> */}
-                      <td>{item.message}</td>
-                      <td>{item.readStatus ? "Yes" : "No"}</td>
-                      <td>{item.lastMessageDate}</td>
-                      <td>{item.lastMessageFromUrl}</td>
-
+                      <td><Moment format="mm:hh DD-MM-YY">{item.lastMessageDate}</Moment></td>
+                      <td dangerouslySetInnerHTML={{ __html: item.message}}></td>
+                      {/* <td>{item.readStatus ? "Yes" : "No"}</td> */}
+                      {/* <td>{item.lastMessageFromUrl}</td> */}
+                      <td>{item.isLastMessageFromMe ? "Yes" : "No"}</td>
+                      <td><a href={item.lastMessageFromUrl}><FontAwesomeIcon icon={faArrowUpRightFromSquare} /></a></td>
                       {/* <td>{item.updatedAt}</td> */}
                     </tr>
                   ))}

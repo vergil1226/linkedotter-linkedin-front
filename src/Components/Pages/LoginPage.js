@@ -115,7 +115,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <div classNameName="container mt-5">
+      <div className="container mt-5">
         <section className="vh-100">
           <div className="container-fluid h-custom">
             <div className="row d-flex justify-content-center align-items-center h-100">
