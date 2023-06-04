@@ -3,7 +3,7 @@ import axios from "axios";
 const authToken = localStorage.getItem("token");
 const baseURL = axios.create({
   // baseURL: "http://localhost:8080",
-  baseURL: "https://36f6-188-43-14-13.eu.ngrok.io/",
+  baseURL: "http://135.181.168.31:8080",
 
   timeout: 80000,
   headers: {
