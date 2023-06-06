@@ -3,7 +3,7 @@ import baseURL from "../../ApiWork/BaseUrl";
 import { ToastContainer, toast } from "react-toastify";
 import { Button, Modal } from "react-bootstrap";
 import ResponseUserTable from "./ResponseUserTable";
-import moment from "moment";
+import moment from "moment-timezone";
 
 export default function AdminDashBoard() {
   const [processAgent, setProcessAgent] = useState([]);
@@ -20,7 +20,6 @@ export default function AdminDashBoard() {
       const resp = await baseURL.get(`/fetch/user/team?team=${newTeam}`);
       if (resp.status === 200) {
         setTabledata(resp.data.data);
-        console.log("hello data table ", resp.data.data);
       }
 
       const ret = await baseURL.get("/openai/checked-date");
@@ -44,7 +43,7 @@ export default function AdminDashBoard() {
       const resp = await baseURL.post("/launchPhantomAgent");
 
       // return resp.data;
-      if (resp.status === 200) {
+      if (resp.status === 200 && resp.data.status !== "error") {
         setLaunchAgent(resp.data);
         toast.success("successfuly launched", {
           position: "top-right",
@@ -57,7 +56,7 @@ export default function AdminDashBoard() {
           theme: "light",
         });
       } else {
-        alert("daat");
+        toast.warning(resp.data.msg, { position: "top-right" });
       }
 
       // console.log("data launch  agent", resp.data);
@@ -157,7 +156,11 @@ export default function AdminDashBoard() {
       <div className="container">
         <div className="row">
           <div className="col-7">
-            <h2>Last checked date: {checkDate.format && checkDate.format('YYYY/M/D hh:mm a')}</h2>
+            <h2>
+              Last checked date:{" "}
+              {checkDate.format &&
+                checkDate.tz("America/New_York").format("YYYY/M/D hh:mm a")}
+            </h2>
           </div>
           <div className="col-5">
             <div>

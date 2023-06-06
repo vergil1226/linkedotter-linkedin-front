@@ -19,7 +19,6 @@ export default function ResponseUserTable({ userId, userName }) {
         limit: 10,
       });
       setMessages(resp.data.data);
-      console.log(resp.data.data);
 
       let dataCount = [];
       for (
