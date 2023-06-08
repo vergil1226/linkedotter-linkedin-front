@@ -6,7 +6,6 @@ import ResponseUserTable from "./ResponseUserTable";
 import moment from "moment-timezone";
 
 export default function AdminDashBoard() {
-  const [processAgent, setProcessAgent] = useState([]);
   const [checkDate, setCheckDate] = useState([]);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -122,18 +121,29 @@ export default function AdminDashBoard() {
     try {
       const resp = await baseURL.post("/fetchPhantomAgentOutput");
       if (resp.status === 200) {
-        setProcessAgent(resp.data);
-        console.log(resp.data.message_status);
-        toast.success(resp.data.message_status, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        if (resp.data.status === "success") {
+          toast.success(resp.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          toast.error(resp.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
       }
     } catch (error) {
       toast.error(" Something went wrong!", {
@@ -225,42 +235,44 @@ export default function AdminDashBoard() {
             </div>
           </div>
         </div>
-      </div>
-      {tabledata &&
-        tabledata.map((item, index) => (
-          <ResponseUserTable
-            key={index}
-            userId={item._id}
-            userName={item.username}
-          />
-        ))}
-      <div>
-        <table style={{ marginTop: "5%" }} className="table table-bordered">
-          <thead>
-            <tr>
-              <th>username</th>
-              <th>team</th>
-              <th>email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tabledata &&
-              tabledata.map((item, index) => (
-                <>
-                  {item.team === "Admin" ? null : (
-                    <tr key={index}>
-                      <td>{item.username}</td>
-                      <td>{item.team}</td>
-                      <td>{item.email}</td>
-                    </tr>
-                  )}
-                </>
-              ))}
-          </tbody>
-        </table>
-      </div>
+        {tabledata &&
+          tabledata.map((item, index) =>
+            item.username === "admin" ? null : (
+              <ResponseUserTable
+                key={index}
+                userId={item._id}
+                userName={item.username}
+              />
+            )
+          )}
+        <div style ={{ padding: "0 50px"}}>
+          <table style={{ marginTop: "5%" }} className="table table-bordered">
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>TTA (Positive Reply)</th>
+                <th>Reply Quality Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tabledata &&
+                tabledata.map((item, index) => (
+                  <>
+                    {item.team === "admin" ? null : (
+                      <tr key={index}>
+                        <td>{item.username}</td>
+                        <td>{item.tta_value}</td>
+                        <td>{item.quality_score}</td>
+                      </tr>
+                    )}
+                  </>
+                ))}
+            </tbody>
+          </table>
+        </div>
 
-      <ToastContainer />
+        <ToastContainer />
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ const baseURL = axios.create({
   // baseURL: "http://localhost:8080",
   baseURL: "https://linkedin-messages-be.herokuapp.com/",
 
-  timeout: 80000,
+  timeout: 300000,
   headers: {
     "x-access-token": authToken,
     "Access-Control-Allow-Origin": "*",

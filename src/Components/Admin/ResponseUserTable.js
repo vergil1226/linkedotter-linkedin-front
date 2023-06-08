@@ -19,6 +19,7 @@ export default function ResponseUserTable({ userId, userName }) {
         limit: 10,
       });
       setMessages(resp.data.data);
+      console.log(resp.data.data);
 
       let dataCount = [];
       for (
@@ -45,6 +46,8 @@ export default function ResponseUserTable({ userId, userName }) {
         <thead>
           <tr>
             <th>Person Name</th>
+            <th>Company Name</th>
+            <th>Job Title</th>
             <th className="col-xxl-1 col-xl-2 col-md-3 col-sm-3">
               LastReply Time
             </th>
@@ -58,7 +61,8 @@ export default function ResponseUserTable({ userId, userName }) {
             messages.map((item, index) => (
               <tr key={index}>
                 <td>{item.firstnameFrom + " " + item.lastnameFrom}</td>
-
+                <td>{item.profile[0]?.company}</td>
+                <td>{item.profile[0]?.jobTitle}</td>
                 <td>
                   <Moment format="mm:hh DD-MM-YY">
                     {item.lastMessageDate}
