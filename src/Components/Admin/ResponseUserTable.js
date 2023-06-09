@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import baseURL from "../../ApiWork/BaseUrl";
 import { Table, Modal, Button } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import Moment from "react-moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import ChatMessages from "./Chatboard";
+import ChatBoard from "./Chat/ChatBoard";
 
 export default function ResponseUserTable({ userId, userName }) {
   const [messages, setMessages] = useState([]);
@@ -18,7 +18,7 @@ export default function ResponseUserTable({ userId, userName }) {
   const handleCloseMessageModal = () => {
     setSelectedUserName("");
     setShowMessageModal(false);
-  }
+  };
 
   const initMessages = async (page) => {
     try {
@@ -31,11 +31,7 @@ export default function ResponseUserTable({ userId, userName }) {
       console.log(resp.data.data);
 
       let dataCount = [];
-      for (
-        let number = 1;
-        number <= Math.ceil(resp.data.count / 10);
-        number++
-      ) {
+      for (let number = 1; number <= Math.ceil(resp.data.count / 10); number++) {
         dataCount.push(number);
       }
       setitems([...dataCount]);
@@ -52,8 +48,8 @@ export default function ResponseUserTable({ userId, userName }) {
       console.log(resp.data.data);
       console.log("Name", firstName);
       setSelectedUserName(firstName);
-      setThread(resp.data.data);
       setShowMessageModal(true);
+      setThread(resp.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -73,9 +69,7 @@ export default function ResponseUserTable({ userId, userName }) {
               <th>Person Name</th>
               <th>Company Name</th>
               <th>Job Title</th>
-              <th className="col-xxl-1 col-xl-2 col-md-3 col-sm-3">
-                LastReply Time
-              </th>
+              <th className="col-xxl-1 col-xl-2 col-md-3 col-sm-3">LastReply Time</th>
               <th>Last Reply content</th>
               <th>Interested?</th>
               <th>LinkedIn URL</th>
@@ -89,15 +83,9 @@ export default function ResponseUserTable({ userId, userName }) {
                   <td>{item.profile[0]?.company}</td>
                   <td>{item.profile[0]?.jobTitle}</td>
                   <td>
-                    <Moment format="mm:hh DD-MM-YY">
-                      {item.lastMessageDate}
-                    </Moment>
+                    <Moment format="mm:hh DD-MM-YY">{item.lastMessageDate}</Moment>
                   </td>
-                  <td
-                    style={{ cursor: "pointer" }}
-                    onClick={() => getMessageThread(item.threadUrl, item.firstnameFrom)}
-                    dangerouslySetInnerHTML={{ __html: item.message }}
-                  ></td>
+                  <td style={{ cursor: "pointer" }} onClick={() => getMessageThread(item.threadUrl, item.firstnameFrom)} dangerouslySetInnerHTML={{ __html: item.message }}></td>
                   <td>{item.isInterested ? "Yes" : "No"}</td>
                   <td>
                     <a href={item.lastMessageFromUrl}>
@@ -137,31 +125,15 @@ export default function ResponseUserTable({ userId, userName }) {
         </Pagination>
       </div>
 
-      <Modal
-        show={showMessageModal}
-        centered
-        onHide={handleCloseMessageModal}
-      >
+      <Modal show={showMessageModal} centered onHide={handleCloseMessageModal} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Message</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {thread.map((item, index) => {
-            return (
-              <ChatMessages
-                key={index}
-                avatar={item.profileUrl}
-                side={item.firstName === selectedUserName ? "left" : "right"}
-                messages={[item.message]}
-              />
-            );
-          })}
+        <Modal.Body style={{ overflowY: "auto", height: "350px" }}>
+          <ChatBoard chats={thread.map((item) => ({ side: item.firstName == selectedUserName ? "left" : "right", avatar: item.imgUrl, message: item.message }))} />
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={handleCloseMessageModal}
-          >
+          <Button variant="secondary" onClick={handleCloseMessageModal}>
             Close
           </Button>
         </Modal.Footer>
