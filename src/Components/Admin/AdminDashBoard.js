@@ -166,44 +166,24 @@ export default function AdminDashBoard() {
       <div className="container">
         <div className="row">
           <div className="col-7">
-            <h2>
-              Last checked date:{" "}
-              {checkDate.format &&
-                checkDate.tz("America/New_York").format("YYYY/M/D hh:mm a")}
-            </h2>
+            <h2>Last checked date: {checkDate.format && checkDate.tz("America/New_York").format("YYYY/M/D hh:mm a")}</h2>
           </div>
           <div className="col-5">
             <div>
-              <Button
-                style={{ marginRight: "16px" }}
-                variant="primary"
-                onClick={handleShow}
-              >
+              <Button style={{ marginRight: "16px" }} variant="primary" onClick={handleShow}>
                 CreateAgent
               </Button>
-              <Button
-                style={{ marginRight: "16px" }}
-                onClick={() => LaunchAgent()}
-              >
+              <Button style={{ marginRight: "16px" }} onClick={() => LaunchAgent()}>
                 Launch Agent
               </Button>
 
-              <Button
-                style={{ marginRight: "16px" }}
-                variant="primary"
-                onClick={() => ProcessedAggent()}
-              >
+              <Button style={{ marginRight: "16px" }} variant="primary" onClick={() => ProcessedAggent()}>
                 Process Agent
               </Button>
             </div>
             <div>
               <div className="col">
-                <Modal
-                  show={show}
-                  onHide={handleClose}
-                  style={{ marginTop: "10%", width: "100%", height: "100vh" }}
-                  animation={false}
-                >
+                <Modal show={show} onHide={handleClose} style={{ marginTop: "10%", width: "100%", height: "100vh" }} animation={false}>
                   <Modal.Header closeButton>
                     <Modal.Title>
                       <center>Create Agent</center>{" "}
@@ -235,17 +215,8 @@ export default function AdminDashBoard() {
             </div>
           </div>
         </div>
-        {tabledata &&
-          tabledata.map((item, index) =>
-            item.username === "admin" ? null : (
-              <ResponseUserTable
-                key={index}
-                userId={item._id}
-                userName={item.username}
-              />
-            )
-          )}
-        <div style ={{ padding: "0 50px"}}>
+        {tabledata && tabledata.map((item, index) => (item.username === "admin" ? null : <ResponseUserTable key={index} userId={item._id} userName={item.username} />))}
+        <div style={{ padding: "0 50px" }}>
           <table style={{ marginTop: "5%" }} className="table table-bordered">
             <thead>
               <tr>
