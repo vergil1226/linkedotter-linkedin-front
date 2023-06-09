@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import baseURL from "../../ApiWork/BaseUrl";
-import { Table, Modal, Button } from "react-bootstrap";
+import { Table, Modal, Button, Spinner } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
 import Moment from "react-moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,6 +14,8 @@ export default function ResponseUserTable({ userId, userName }) {
   const [items, setitems] = useState([]);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [selectedUserName, setSelectedUserName] = useState("");
+  const [isPageLoading, setIsPageLoading] = useState(false);
+  const [isTableLoading, setIsTableLoading] = useState(false);
 
   const handleCloseMessageModal = () => {
     setSelectedUserName("");
@@ -22,6 +24,7 @@ export default function ResponseUserTable({ userId, userName }) {
 
   const initMessages = async (page) => {
     try {
+      setIsTableLoading(true);
       const resp = await baseURL.post("/fetch/all/user-messages", {
         userId,
         page,
@@ -35,13 +38,16 @@ export default function ResponseUserTable({ userId, userName }) {
         dataCount.push(number);
       }
       setitems([...dataCount]);
+      setIsTableLoading(false);
     } catch (error) {
-      console.log(error);
+      setIsTableLoading(false);
+      console.log(error.message);
     }
   };
 
   const getMessageThread = async (threadUrl, firstName) => {
     try {
+      setIsPageLoading(true);
       const resp = await baseURL.post("fetch/all/message-thread", {
         threadUrl,
       });
@@ -50,8 +56,10 @@ export default function ResponseUserTable({ userId, userName }) {
       setSelectedUserName(firstName);
       setShowMessageModal(true);
       setThread(resp.data.data);
+      setIsPageLoading(false);
     } catch (error) {
-      console.log(error);
+      setIsPageLoading(false);
+      console.log(error.message);
     }
   };
 
@@ -63,7 +71,7 @@ export default function ResponseUserTable({ userId, userName }) {
     <>
       <div style={{ width: "100%" }}>
         <h1>{userName}</h1>
-        <Table striped bordered hover responsive>
+        <Table striped bordered hover responsive style={{ position: "relative" }}>
           <thead>
             <tr>
               <th>Person Name</th>
@@ -76,39 +84,47 @@ export default function ResponseUserTable({ userId, userName }) {
             </tr>
           </thead>
           <tbody>
-            {messages &&
-              messages.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.firstnameFrom + " " + item.lastnameFrom}</td>
-                  <td>{item.profile[0]?.company}</td>
-                  <td>{item.profile[0]?.jobTitle}</td>
-                  <td>
-                    <Moment format="mm:hh DD-MM-YY">{item.lastMessageDate}</Moment>
-                  </td>
-                  <td style={{ cursor: "pointer" }} onClick={() => getMessageThread(item.threadUrl, item.firstnameFrom)} dangerouslySetInnerHTML={{ __html: item.message }}></td>
-                  <td>{item.isInterested ? "Yes" : "No"}</td>
-                  <td>
-                    <a href={item.lastMessageFromUrl}>
-                      <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                    </a>
-                  </td>
-                </tr>
-              ))}
+            {isTableLoading && (
+              <tr>
+                <td colSpan={7} style={{ height: "500px", verticalAlign: "middle" }}>
+                  <Spinner animation="border" variant="secondary" />
+                </td>
+              </tr>
+            )}
+            {!isTableLoading && (
+              <>
+                {messages.length > 0 &&
+                  messages.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.firstnameFrom + " " + item.lastnameFrom}</td>
+                      <td>{item.profile[0]?.company}</td>
+                      <td>{item.profile[0]?.jobTitle}</td>
+                      <td>
+                        <Moment format="mm:hh DD-MM-YY">{item.lastMessageDate}</Moment>
+                      </td>
+                      <td style={{ cursor: "pointer" }} onClick={() => getMessageThread(item.threadUrl, item.firstnameFrom)} dangerouslySetInnerHTML={{ __html: item.message }}></td>
+                      <td>{item.isInterested ? "Yes" : "No"}</td>
+                      <td>
+                        <a href={item.lastMessageFromUrl}>
+                          <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                {messages.length === 0 && (
+                  <tr>
+                    <td colSpan={7}>No Data!</td>
+                  </tr>
+                )}
+              </>
+            )}
           </tbody>
+          {isPageLoading && (
+            <div style={{ position: "absolute", top: "0", left: "0", bottom: "0", right: "0", background: "rgba(0,0,0,0.3)" }}>
+              <Spinner animation="grow" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, 50%)" }} />
+            </div>
+          )}
         </Table>
-        {messages.length === 0 ? (
-          <h2
-            style={{
-              border: "1px solid #e3e3e3",
-              marginTop: -16,
-              height: 100,
-              verticalAlign: "middle",
-              lineHeight: "100px",
-            }}
-          >
-            No Data!
-          </h2>
-        ) : null}
         <Pagination>
           {items.map((number) => (
             <Pagination.Item
