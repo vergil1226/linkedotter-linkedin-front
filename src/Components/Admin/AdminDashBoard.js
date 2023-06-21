@@ -232,7 +232,7 @@ export default function AdminDashBoard() {
                     {item.team === "admin" ? null : (
                       <tr key={index}>
                         <td>{item.username}</td>
-                        <td>{item.tta_value}</td>
+                        <td>{Math.round(item.tta_value)}h : {moment.duration(item.tta_value, 'hours').minutes()}m</td>
                         <td>{item.quality_score}</td>
                       </tr>
                     )}
