@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import baseURL from "../../ApiWork/BaseUrl";
 import { Table, Modal, Button, Spinner } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
@@ -31,10 +31,13 @@ export default function ResponseUserTable({ userId, userName }) {
         limit: 10,
       });
       setMessages(resp.data.data);
-      console.log(resp.data.data);
 
       let dataCount = [];
-      for (let number = 1; number <= Math.ceil(resp.data.count / 10); number++) {
+      for (
+        let number = 1;
+        number <= Math.ceil(resp.data.count / 10);
+        number++
+      ) {
         dataCount.push(number);
       }
       setitems([...dataCount]);
@@ -51,8 +54,6 @@ export default function ResponseUserTable({ userId, userName }) {
       const resp = await baseURL.post("fetch/all/message-thread", {
         threadUrl,
       });
-      console.log(resp.data.data);
-      console.log("Name", firstName);
       setSelectedUserName(firstName);
       setShowMessageModal(true);
       setThread(resp.data.data);
@@ -65,19 +66,27 @@ export default function ResponseUserTable({ userId, userName }) {
 
   useEffect(() => {
     initMessages();
-  }, []);
+  }, [userId]);
 
   return (
     <>
       <div style={{ width: "100%" }}>
         <h1>{userName}</h1>
-        <Table striped bordered hover responsive style={{ position: "relative" }}>
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          style={{ position: "relative" }}
+        >
           <thead>
             <tr>
               <th>Person Name</th>
               <th>Company Name</th>
               <th>Job Title</th>
-              <th className="col-xxl-1 col-xl-2 col-md-3 col-sm-3">LastReply Time</th>
+              <th className="col-xxl-1 col-xl-2 col-md-3 col-sm-3">
+                LastReply Time
+              </th>
               <th>Last Reply content</th>
               <th>Interested?</th>
               <th>LinkedIn URL</th>
@@ -86,7 +95,10 @@ export default function ResponseUserTable({ userId, userName }) {
           <tbody>
             {isTableLoading && (
               <tr>
-                <td colSpan={7} style={{ height: "500px", verticalAlign: "middle" }}>
+                <td
+                  colSpan={7}
+                  style={{ height: "500px", verticalAlign: "middle" }}
+                >
                   <Spinner animation="border" variant="secondary" />
                 </td>
               </tr>
@@ -100,9 +112,17 @@ export default function ResponseUserTable({ userId, userName }) {
                       <td>{item.profile[0]?.company}</td>
                       <td>{item.profile[0]?.jobTitle}</td>
                       <td>
-                        <Moment format="mm:hh DD-MM-YY">{item.lastMessageDate}</Moment>
+                        <Moment format="hh:mm DD-MM-YY">
+                          {item.lastMessageDate}
+                        </Moment>
                       </td>
-                      <td style={{ cursor: "pointer" }} onClick={() => getMessageThread(item.threadUrl, item.firstnameFrom)} dangerouslySetInnerHTML={{ __html: item.message }}></td>
+                      <td
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          getMessageThread(item.threadUrl, item.firstnameFrom)
+                        }
+                        dangerouslySetInnerHTML={{ __html: item.message }}
+                      ></td>
                       <td>{item.isInterested ? "Yes" : "No"}</td>
                       <td>
                         <a href={item.lastMessageFromUrl}>
@@ -120,8 +140,25 @@ export default function ResponseUserTable({ userId, userName }) {
             )}
           </tbody>
           {isPageLoading && (
-            <div style={{ position: "absolute", top: "0", left: "0", bottom: "0", right: "0", background: "rgba(0,0,0,0.3)" }}>
-              <Spinner animation="grow" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, 50%)" }} />
+            <div
+              style={{
+                position: "absolute",
+                top: "0",
+                left: "0",
+                bottom: "0",
+                right: "0",
+                background: "rgba(0,0,0,0.3)",
+              }}
+            >
+              <Spinner
+                animation="grow"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, 50%)",
+                }}
+              />
             </div>
           )}
         </Table>
@@ -141,12 +178,23 @@ export default function ResponseUserTable({ userId, userName }) {
         </Pagination>
       </div>
 
-      <Modal show={showMessageModal} centered onHide={handleCloseMessageModal} size="lg">
+      <Modal
+        show={showMessageModal}
+        centered
+        onHide={handleCloseMessageModal}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Message</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ overflowY: "auto", height: "350px" }}>
-          <ChatBoard chats={thread.map((item) => ({ side: item.firstName == selectedUserName ? "left" : "right", avatar: item.imgUrl, message: item.message }))} />
+          <ChatBoard
+            chats={thread.map((item) => ({
+              side: item.firstName === selectedUserName ? "left" : "right",
+              avatar: item.imgUrl,
+              message: item.message,
+            }))}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseMessageModal}>
