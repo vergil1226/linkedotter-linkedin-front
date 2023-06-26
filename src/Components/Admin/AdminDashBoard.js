@@ -39,7 +39,9 @@ export default function AdminDashBoard() {
 
   const onTeamChange = async (e) => {
     const selectedTeam = e.target.value;
-    const resp = await baseURL.get(`/fetch/user/team?team=${selectedTeam === "-1" ? "" : selectedTeam}`);
+    const resp = await baseURL.get(
+      `/fetch/user/team?team=${selectedTeam === "-1" ? "" : selectedTeam}`
+    );
     if (resp.status === 200) {
       setTabledata(resp.data.data);
       console.log(resp.data.data);
@@ -104,10 +106,11 @@ export default function AdminDashBoard() {
                       <tr key={index}>
                         <td>{item.username}</td>
                         <td>
-                          {Math.round(item.tta_value)}h :{" "}
-                          {moment.duration(item.tta_value, "hours").minutes()}m
+                          {!item.tta_value
+                            ? 0
+                            : moment.utc(moment.duration(item.tta_value, 'hours').asMilliseconds()).format('D[d] H[h] m[m]')}
                         </td>
-                        <td>{item.quality_score}</td>
+                        <td>{item.quality_score ? Number(item.quality_score).toFixed(2) : 0}</td>
                       </tr>
                     )}
                   </>
